@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authorized</title>
+</head>
+<body>
+
+<!-- Your content goes here -->
+
+<script>
+    // 驗證成功後的處理函數
+    function handleLoginSuccess() {
+        // 向主視窗發送消息
+        window.opener.postMessage('loginSuccess', '*');
+
+        // 關閉當前視窗
+        window.close();
+
+        // 修改主視窗的網址為首頁
+        const homepageUrl = '{{ url_for("main.home") }}'; // 修改這一行
+        window.opener.location.href = homepageUrl;
+    }
+
+    // 在頁面載入完成後，調用 handleLoginSuccess
+    document.addEventListener('DOMContentLoaded', function() {
+        handleLoginSuccess();
+    });
+</script>
+
+</body>
+</html>

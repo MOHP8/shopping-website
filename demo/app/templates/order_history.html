@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    {% block title %}訂單查詢{% endblock %}
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css"/>
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"/>
+    <!-- MDB -->
+    <link rel="stylesheet" href="static/css/mdb.min.css"/>
+    <!-- Custom styles -->
+    <!-- <link rel="stylesheet" href="static/css/style.css"/> -->
+{% endblock %}
+
+{% block content %}
+    <body>
+    <div class="container mt-5">
+        <h2 class="text-center">訂單查詢</h2>
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">查詢訂單歷史</h5>
+                <p class="card-text">在這裡，您可以查詢您的訂單歷史，查看之前的購買記錄。</p>
+                <!-- 在這裡顯示訂單資訊 -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>訂單編號</th>
+                            <th>訂單日期</th>
+                            <th>總價</th>
+                            <th>訂單狀態</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in order_data %}
+                            <tr>
+                                <td>{{ order[0] }}</td>
+                                <td>{{ order[1].strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                                <td>{{ order[2] }}</td>
+                                <td>{{ order[3] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('auth.dashboard') }}" class="btn btn-primary">返回會員專區</a>
+        </div>
+    </div>
+    </body>
+{% endblock %}

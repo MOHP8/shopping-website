@@ -1,0 +1,486 @@
+ <!-- base.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+     {% block head %}{% endblock %}
+
+    <!-- Loading 提示的 CSS 樣式 -->
+    <style>
+        #global-loading-overlay {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8); /* 半透明白色背景 */
+            z-index: 9999; /* 保證在最上層 */
+        }
+   
+       #global-loading-content {
+           background-color: #fff;
+           padding: 20px;
+       }
+
+   
+       #message_input {
+           padding: 8px;
+           width: 60%;
+           margin-right: 5px;
+           border: 1px solid #ccc;
+           border-radius: 4px;
+           margin-bottom: 10px;
+       }
+   
+       #send_button {
+           padding: 8px 12px;
+           background-color: #4CAF50;
+           color: white;
+           border: none;
+           border-radius: 4px;
+           cursor: pointer;
+       }
+
+       #contactHumanButton {
+           padding: 8px 12px;
+           background-color: #3498db;
+           color: white;
+           border: none;
+           border-radius: 4px;
+           cursor: pointer;
+       }
+
+       #chat_history{
+            padding: 8px 12px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #live-chat {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 10px;
+            width: 400px;
+            height: 600px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+        }
+
+        #live-chat header {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #live-chat-messages {
+            max-height: 300px; /* 使用 max-height 限制高度 */
+            overflow-y: auto;
+            list-style-type: none;
+            padding: 10px;
+            margin: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #live-chat header h4 {
+            margin: 0;
+        }
+
+        #live-chat .chat {
+            max-height: 300px; /* 使用 max-height 限制高度 */
+            padding: 10px;
+        }
+
+        #live-chat input, #live-chat button {
+            width: calc(100% - 20px);
+            margin: 10px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        #live-chat-button {
+            position: fixed;
+            background-color: transparent;
+            border: none;
+            cursor: grab; /* 設定為 grab */
+            transition: transform 0.3s ease, filter 0.3s ease;
+            bottom: 60px;
+            right: 30px;
+            z-index: 9999;
+        }
+
+        #live-chat-button:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+
+        #live-chat-button:active {
+            filter: brightness(0.8);
+            cursor: grabbing; /* 設定為 grabbing */
+        }
+
+        .chat-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .chat-close:hover {
+            color: #eee;
+        }
+
+        .customer-message {
+            text-align: left; /* 修改 text-align 屬性為 left */
+            color: blue;      /* 可以更改顏色或其他樣式 */
+        }
+
+        .backend-message {
+            text-align: right; /* 修改 text-align 屬性為 right */
+            color: green;     /* 可以更改顏色或其他樣式 */
+        }
+
+        #loginPrompt {
+            padding: 8px 12px;
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #loginPrompt:hover {
+            background-color: #2980b9; /* 滑鼠懸停時的背景色 */
+        }
+       </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    var socket = io.connect();
+    // 將客戶發送的訊息直接顯示在聊天室中
+    function sendMessage() {
+        var messageInput = document.getElementById('message_input');
+        var sendButton = document.getElementById('send_button');
+        var customerMessage = messageInput.value.trim(); // 使用 trim() 去掉前後空白
+
+        if (!sendButton || sendButton.disabled || customerMessage === '') {
+            // 如果按鈕不存在、被禁用或訊息為空，不執行後續操作
+            // Swal.fire({
+            //     icon: 'warning',
+            //     title: '請輸入訊息',
+            //     text: '請輸入您想要發送的訊息。',
+            // })
+            return;
+        }
+
+        // 禁用 Enter 鍵
+        document.removeEventListener('keypress', handleKeyPress);
+
+        // 禁用送出按鈕
+        sendButton.disabled = true;
+
+        var messages = document.getElementById('live-chat-messages');
+        var li = document.createElement('li');
+
+        li.classList.add('customer-message'); // 將訊息標記為客戶訊息
+        li.appendChild(document.createTextNode(customerMessage));
+        messages.appendChild(li);
+
+        // 清空輸入框
+        messageInput.value = '';
+
+        // 將客戶訊息直接顯示在聊天室中，不必等待伺服器確認
+        // （如果伺服器需要處理客戶訊息，仍然需要這一行代碼）
+        socket.emit('message', customerMessage);
+
+        // 捲動到底部
+        messages.scrollTop = messages.scrollHeight;
+
+        // 將消息保存到本地存儲
+        saveMessageToLocalStorage('customer', customerMessage);
+    }
+
+    // 在 Socket.IO 事件處理程序中添加後端的回覆
+    socket.on('message', function(messageObject) {
+        var messages = document.getElementById('live-chat-messages');
+        var sendButton = document.getElementById('send_button');
+        var li = document.createElement('li');
+
+        // 處理消息內容
+        var messageText = (typeof messageObject.message === 'object') ? messageObject.message.message : messageObject.message;
+
+        if (messageObject.sender === 'customer') {
+            li.classList.add('customer-message');
+        } else {
+            li.classList.add('backend-message');
+        }
+
+        li.appendChild(document.createTextNode(messageText));
+        messages.appendChild(li);
+
+        // 捲動到底部
+        messages.scrollTop = messages.scrollHeight;
+
+        // 將消息保存到本地存儲
+        saveMessageToLocalStorage(messageObject.sender, messageText);
+
+        // 確保在發送完成後重新啟用 Enter 鍵
+        document.addEventListener('keypress', handleKeyPress);
+        
+        // 啟用送出按鈕
+        sendButton.disabled = false;
+
+    });
+
+    // 新增的函數，用來切換即時聊天窗口的顯示和隱藏
+    function toggleLiveChat(event) {
+        var liveChat = document.getElementById('live-chat');
+        var isChatOpen = (liveChat.style.display === 'none' || liveChat.style.display === '');
+
+        liveChat.style.display = isChatOpen ? 'block' : 'none';
+
+        // 將開啟狀態保存到本地存儲
+        localStorage.setItem('isChatOpen', isChatOpen);
+
+        // 阻止事件的默認行為
+        if (event) {
+            event.preventDefault();
+        }
+    }
+
+    // 在頁面載入時從本地存儲中讀取歷史消息和聊天窗口的開啟狀態
+    window.onload = function() {
+        loadMessagesFromLocalStorage();
+        
+        // 根據本地存儲中的開啟狀態設置聊天窗口的初始狀態
+        var isChatOpen = localStorage.getItem('isChatOpen');
+        var liveChat = document.getElementById('live-chat');
+        liveChat.style.display = (isChatOpen === 'true') ? 'block' : 'none';
+    };
+
+    // 將消息保存到本地存儲
+    function saveMessageToLocalStorage(sender, message) {
+        var existingMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+        existingMessages.push({
+            sender: sender,
+            message: message
+        });
+        localStorage.setItem('chatMessages', JSON.stringify(existingMessages));
+    }
+
+    // 從本地存儲中讀取歷史消息並顯示
+    function loadMessagesFromLocalStorage() {
+        var existingMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+
+        var messages = document.getElementById('live-chat-messages');
+        messages.innerHTML = ''; // 清空現有消息
+
+        existingMessages.forEach(function (messageObject) {
+            var li = document.createElement('li');
+            var messageText = (typeof messageObject.message === 'object') ? messageObject.message.message : messageObject.message;
+
+            li.classList.add(messageObject.sender + '-message');
+            li.appendChild(document.createTextNode(messageText));
+            messages.appendChild(li);
+        });
+
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    // 清除本地存儲中的所有消息和聊天窗口的開啟狀態
+    function clearLocalStorage() {
+        localStorage.removeItem('chatMessages');
+        localStorage.removeItem('isChatOpen');
+        
+        var messages = document.getElementById('live-chat-messages');
+        messages.innerHTML = ''; // 同時清空聊天窗口中的內容
+    }
+
+    function redirectToLogin() {
+        window.location.href = '/login';
+    }
+
+    function contactHuman() {
+        // 顯示 SweetAlert 通知
+        Swal.fire({
+            icon: 'info', // 可以是 'success', 'error', 'warning', 'info', 等
+            title: '待開發',
+            text: '這個功能還在開發中。',
+        });
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === "Enter") {
+            sendMessage();
+            event.preventDefault(); // 防止預設的 Enter 鍵行為
+        }
+    }
+    
+</script>
+
+</head>
+<body>
+
+    <button id="live-chat-button" onclick="toggleLiveChat(event) " style="background-color: transparent;  border: none;">
+        <img src="/static/img/chat_logo.png" alt="Live Chat">
+    </button>
+    <!-- chat container -->
+    <div id="live-chat" class="container">
+        <header class="clearfix">
+            <a href="#" class="chat-close" onclick="toggleLiveChat(event)">x</a>
+            <h8>PM&HO即時聊天室(使用google Gemini進行對話)</h8>
+        </header>
+        <div class="card chat">
+            <ul id="live-chat-messages" class="list-group list-group-flush flex-grow-1"></ul>
+        </div>
+        <div class="card input-group mb-3">
+            <input id="message_input" type="text" class="form-control" placeholder="請輸入想詢問的問題..." onkeypress="handleKeyPress(event)">
+            <div class="input-group-append">
+                <button id = "send_button" class="btn btn-primary" type="button" onclick="sendMessage()">送出</button>
+                <button id="chat_history" class="btn btn-danger" type="button" onclick="clearLocalStorage()">清除聊天歷史</button>
+                {% if 'user_info' in session %}
+                    <button id="contactHumanButton" class="btn btn-info" type="button" onclick="contactHuman()">聯繫真人客服</button>
+                {% else %}
+                    <p id="loginPrompt" class="btn btn-warning" onclick="redirectToLogin()">請先登錄以聯繫客服。</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading 提示的 HTML 內容 -->
+    <div id="global-loading-overlay" style="display: none;">
+    <div id="global-loading-content">
+        <!-- 插入動態 GIF 圖片 -->
+        <img src="/static/img/loading.gif" alt="Loading..." />
+    </div>
+    </div>
+
+    <!--Navbar-->
+    <!-- Navbar -->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-white">
+        <!-- Container wrapper -->
+        <div class="container">
+            <!-- Toggle button -->
+            <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-mdb-toggle="collapse"
+                    data-mdb-target="#navbarSupportedContent1"
+                    aria-controls="navbarSupportedContent1"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <!-- Collapsible wrapper -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+                <!-- Navbar brand -->
+                <a class="navbar-brand mt-2 mt-sm-0" href="{{ url_for('main.home') }}">
+                    <img src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp" height="20" alt="MDB Logo"
+                        loading="lazy"/>
+                </a>
+                <!-- Left links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                </ul>
+                <!-- Left links -->
+            </div>
+            <!-- Collapsible wrapper -->
+
+            <!-- Right elements -->
+
+            {% if 'user_info' in session %}
+            <div class="d-flex align-items-center">
+            <ul class="nav">
+                <li class="nav-item"></li>
+                <a class="nav-link" href="{{ url_for('auth.dashboard')}}">歡迎回來, {{ session['user_info']['MemberName'] }}!</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.logout') }}">登出</a>
+                </li>
+            </ul>
+            </div>
+            {% else %}
+            <!-- 用戶已登入,顯示用戶名和登出選項 -->
+            <div class="d-flex align-items-center">
+                <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">登入</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.register') }}">註冊</a>
+                </li>
+                </ul>
+            </div>
+            {% endif %}
+
+            <div class="d-flex align-items-center">
+                <!-- Icon -->
+                <a class="nav-link me-3" href="{{ url_for('shop_cart.checkout') }}" >
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="badge rounded-pill badge-notification bg-danger" id="cart-count"></span>
+                </a>
+
+                <a class="nav-link me-3" href="#">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a class="nav-link me-3" href="#">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="border rounded px-2 nav-link"
+                target="_blank"> <i class="fab fa-github me-2"></i>MDB GitHub </a>
+            </div>
+            <!-- Right elements -->
+        </div>
+        <!-- Container wrapper -->
+    </nav>
+    <!-- Navbar -->
+
+    <!--顯示購物車數車-->
+    <script>
+        // 向服务器发送 POST 请求以增加购物车数量
+        fetch('/update_cart', {
+            method: 'GET',
+        })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json(); // 解析 JSON 数据
+            }
+        })
+        .then(data => {
+            // 更新页面上的购物车数量元素
+            const cartCountElement = document.getElementById('cart-count');
+            cartCountElement.textContent = data.cart_count;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    </script>
+    <!-- 引入 loading.js 文件 -->
+    <script src="/static/js/loading.js"></script>
+    <script src="/static/js/mdb.min.js"></script>
+
+    {% block content %}{% endblock %}
+</body>
+</html>

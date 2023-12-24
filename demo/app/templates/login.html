@@ -1,0 +1,562 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+<meta http-equiv="x-ua-compatible" content="ie=edge"/>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css"/>
+<!-- Google Fonts Roboto -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"/>
+<!-- MDB -->
+<link rel="stylesheet" href="static/css/mdb.min.css"/>
+<!-- Custom styles -->
+<!-- <link rel="stylesheet" href="static/css/style.css"/> -->
+{% endblock %}
+
+
+{% block content %}
+<html lang="zh-TW">
+<head>
+    <!-- 在 head 段落中引入 reCAPTCHA v3 -->
+    <script src="https://www.google.com/recaptcha/api.js?render={{ config.SITE_KEY_V3 }}"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入頁面</title>
+    <!-- 引入Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 引入Font Awesome圖標 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f4f4;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12 col-md-6 offset-md-3">
+                <div class="login-container">
+                    <h2 class="text-center mb-4">登入</h2>
+                    <form method="POST" action="{{ url_for('auth.login') }}">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">郵箱 (帳號)</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">密碼</label>
+                            <div class="input-group">
+                                <input type="password" id="password" name="password" class="form-control" required>
+                                <button class="btn btn-outline-secondary" type="button" id="passwordToggle">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- reCAPTCHA v2 -->
+                        <div class="center-recaptcha">
+                            <div class="g-recaptcha" data-sitekey="{{ config.SITE_KEY_V2 }}"></div>
+                        </div>
+                        <button class="btn btn-primary btn-block" type="submit">登入</button>
+                                            <div class="text-center mt-3">
+                        <a href="{{ url_for('auth.forgot_password') }}">忘記密碼？</a>
+                        
+                        <!-- 隱藏字段用於存儲 reCAPTCHA v3 生成的令牌 -->
+                        <input type="hidden" id="recaptcha-token" name="recaptcha_token" value="">
+    
+                        <div class="text-center mt-3">
+                            <div class="lhhucE">
+                                <div class="lreZhl"></div>
+                                <span class="PqS8vj">或</span>
+                                <div class="lreZhl"></div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- 登入表單 -->
+                    <form>
+                         <!-- 在登錄表單之後添加 Google 登錄按鈕 -->
+                         <div class="center-container">
+                            <!-- 自建 google 登入 -->
+                            <button class="custom-button" onclick="openGoogleLoginPopup()">
+                                <img src="static/img/Google__G__Logo.png" alt="Google Icon">
+                                Google
+                            </button>
+                        
+                            <!-- 自建 FaceBook 登入 -->
+                            <button class="custom-button" onclick="facebookLogin()">
+                                <img src="static/img/Facebook_Logo.png" alt="FaceBook Icon">
+                                FaceBook
+                            </button>
+                        
+                            <!-- 自建 Line 登入 -->
+                            <button class="custom-button" onclick="">
+                                <img src="static/img/Line_Logo.png" alt="Line Icon">
+                                Line
+                            </button>
+                        </div> 
+                    </form>
+                    <form>
+                        <div class="center-container">
+                            <!-- 自建 Twitter 登入 -->
+                            <button class="custom-button" onclick="openTwitterLoginPopup()">
+                                <img src="static/img/twitter_logo.png">
+                                Twitter
+                            </button>
+                        
+                            <!-- 自建 XX 登入 -->
+                            <button class="custom-button" onclick="">
+                                <img src="">
+                                
+                            </button>
+                        
+                            <!-- 自建 XX 登入 -->
+                            <button class="custom-button" onclick="">
+                                <img src="">
+                                
+                            </button>
+                        </div>
+                    </form>
+                    <form>
+                        <!-- google 登入 (js) -->
+                        <div id="buttonDiv" style="max-width: 120px; overflow: hidden;"></div>
+                        <!-- twitter 登入按鈕 -->
+                    </form>
+                    <div class="text-center mt-3">
+                        還沒有帳號？ 
+                        <a href="{{ url_for('auth.register') }}">立即註冊</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="alert alert-warning">
+                            <ul>
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入Bootstrap JavaScript連接，如果需要 -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <!-- 引入jQuery，如果需要 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/passwordToggle.js') }}"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
+    <!-- 在 body 段落中使用 reCAPTCHA v3 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            grecaptcha.ready(function() {
+                grecaptcha.execute('{{ config.SITE_KEY_V3 }}', { action: 'submit' }).then(function(token) {
+                    // 在這裡處理 token，可以將它提交給伺服器進行驗證
+                    // 例如，將它加入表單的一個隱藏字段
+                    // console.log('reCAPTCHA v3 token:', token);
+
+                    // 將 token 放入表單的隱藏字段中
+                    document.getElementById('recaptcha-token').value = token;
+                });
+            });
+        });
+    </script>   
+    <script>
+        var googleLoginPopup;
+    
+        function openGoogleLoginPopup() {
+            // 在打開新視窗之前檢查是否已經授權
+            if (window.opener && window.opener.googleLoginAuthorized) {
+                // 已經授權，執行相應的操作
+                window.opener.handleGoogleLoginPopupClose();
+            } else {
+                // 尚未授權，打開新視窗
+                var url = "{{ url_for('google_verify.google.login') }}";
+                var width = 500;
+                var height = 600;
+                var left = (screen.width - width) / 2;
+                var top = (screen.height - height) / 2;
+                googleLoginPopup = window.open(url, 'GoogleLoginPopup', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
+    
+                // 監聽新視窗的消息事件
+                window.addEventListener('message', function(event) {
+                    // 收到來自新視窗的消息，執行相應的操作
+                    if (event.data === 'loginSuccess') {
+                        // 關閉新視窗
+                        googleLoginPopup.close();
+    
+                        // 在主視窗執行相應的操作
+                        if (window.opener) {
+                            window.opener.handleGoogleLoginPopupClose();
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+    <!-- <script>
+        function facebookLogin() {
+            // 確保 Facebook SDK 已經初始化
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId: '{{ config.FACEBOOK_APP_ID }}',
+                    xfbml: true,
+                    version: '{{ config.FACEBOOK_SDK_VERSION }}'
+                });
+
+                // 使用 FB.login 進行登入
+                FB.login(function(response) {
+                    if (response.authResponse) {
+                        console.log('Welcome! Fetching your information....');
+                        FB.api('/me', { fields: 'name, email' }, function(response) {
+                            // 呼叫函數處理使用者資訊
+                            handleUserInfo(response);
+                        });
+                    } else {
+                        console.log('User cancelled login or did not fully authorize.');
+                    }
+                }, { scope: 'email' });
+            };
+            
+            // 確保 Facebook SDK 被正確加載
+            (function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) { return; }
+                js = d.createElement(s); js.id = id;
+                js.src = "https://connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+
+            // 函數處理使用者資訊
+            function handleUserInfo(response) {
+                var userId = response.id;
+                var userName = response.name;
+                var userEmail = response.email;
+
+                // 呼叫函數發送使用者資訊到伺服器
+                sendUserInfoToServer(userId, userName, userEmail);
+            }
+
+            // 函數發送使用者資訊到伺服器
+            function sendUserInfoToServer(userId, userName, userEmail) {
+                // 使用 AJAX 發送 POST 請求到伺服器
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/facebook/authorized", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+
+                var data = {
+                    userId: userId,
+                    userName: userName,
+                    userEmail: userEmail
+                };
+
+                xhr.send(JSON.stringify(data));
+
+                // 在請求成功後，導向到主頁面
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        // 請求成功，導向到主頁面
+                        window.location.href = '/'; // 請修改這裡的路徑為你的主頁面路徑
+                    } else {
+                        // 請求失敗，你可以在這裡處理錯誤情況
+                        console.error('Request failed with status', xhr.status);
+                    }
+                };
+            }
+        }
+    </script> -->
+
+    <script>
+        // 在頁面載入時初始化 Facebook SDK
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '{{ config.FACEBOOK_APP_ID }}',
+                xfbml: true,
+                version: '{{ config.FACEBOOK_SDK_VERSION }}'
+            });
+        };
+    
+        // 確保 Facebook SDK 被正確加載
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement(s); js.id = id;
+            js.src = "https://connect.facebook.net/zh_TW/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    
+        // 用戶點擊按鈕時執行此函數
+        function facebookLogin() {
+            // 檢查用戶是否已經登入
+            FB.getLoginStatus(function (response) {
+                if (response.status === 'connected') {
+                    // 用戶已經登入，獲取用戶信息
+                    // console.log('用戶已經登入。正在獲取您的信息....');
+                    fetchUserInfo();
+                } else {
+                    // 用戶未登入，執行登入
+                    FB.login(function (loginResponse) {
+                        if (loginResponse.authResponse) {
+                            // 登入成功，獲取用戶信息
+                            // console.log('歡迎！正在獲取您的信息....');
+                            fetchUserInfo();
+                        } else {
+                            // console.log('用戶取消登入或未完全授權。');
+                        }
+                    }, { scope: 'email' });
+                }
+            });
+        }
+    
+        // 獲取用戶信息
+        function fetchUserInfo() {
+            FB.api('/me', { fields: 'name, email' }, function (response) {
+                // 處理用戶信息
+                handleUserInfo(response);
+            });
+        }
+    
+        // 處理用戶信息的函數
+        function handleUserInfo(response) {
+            var userId = response.id;
+            var userName = response.name;
+            var userEmail = response.email;
+    
+            // 調用函數將用戶信息發送到伺服器
+            sendUserInfoToServer(userId, userName, userEmail);
+        }
+    
+        // 將用戶信息發送到伺服器的函數
+        function sendUserInfoToServer(userId, userName, userEmail) {
+            // 使用 AJAX 發送 POST 請求到伺服器
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/facebook/authorized", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+    
+            var data = {
+                userId: userId,
+                userName: userName,
+                userEmail: userEmail
+            };
+    
+            xhr.send(JSON.stringify(data));
+    
+            // 在請求成功後，導向到主頁面
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    // 請求成功，導向到主頁面
+                    window.location.href = '/'; // 請修改這裡的路徑為你的主頁面路徑
+                } else {
+                    // 請求失敗，你可以在這裡處理錯誤情況
+                    console.error('請求失敗，狀態碼', xhr.status);
+                }
+            };
+        }
+    </script>
+    
+    
+    <!-- Google 登入相關腳本 -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        // 解析 JWT 的函數
+        function parseJwt(token) {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            var jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            return JSON.parse(jsonPayload);
+        }
+
+        // 處理 Google Sign-In 響應的函數
+        function handleCredentialResponse(response) {
+            // 調試時記錄整個 Google 響應
+            // console.log('完整的 Google 響應:', response);
+
+            // 檢查響應中是否存在用戶資料
+            if (response.credential) {
+                // 解碼 JWT 以獲取用戶信息
+                const userProfile = parseJwt(response.credential);
+
+                // 記錄用戶資料
+                // console.log('用戶資料:', userProfile);
+
+                // 將 ID token 和用戶信息發送到後端
+                sendToBackend({ idToken: response.credential, userProfile: userProfile });
+            } else {
+                // console.error('在響應中找不到用戶資料。');
+                // 在這裡添加適當的錯誤處理
+            }
+        }
+
+        function sendToBackend(data) {
+            // console.log('發送數據到後端:', data);
+
+            // 使用 Fetch API 將資料發送到後端
+            fetch('/google_login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    if (response.headers.get('Content-Type') && response.headers.get('Content-Type').includes('application/json')) {
+                        // 如果 Content-Type 是 JSON，嘗試解析為 JSON
+                        return response.json().then(data => Promise.reject(data));
+                    } else {
+                        // 否則，直接拋出錯誤
+                        throw new Error('網絡響應不正確');
+                    }
+                }
+                return response.json();
+            })
+            .then(data => {
+                // console.log('後端的回應:', data);
+                // 在這裡處理後端的回應
+                
+                // 添加跳轉邏輯(回首頁)
+                window.location.href = '/'; 
+            })
+            .catch(error => {
+                console.error('發生錯誤:', error);
+            });
+        }
+
+        // 當頁面載入時初始化 Google Sign-In
+        window.onload = function () {
+            google.accounts.id.initialize({
+                client_id: "565481039292-kfilnia3d2513brdmgakmhdrtp8os9j1.apps.googleusercontent.com",
+                callback: handleCredentialResponse
+            });
+
+            google.accounts.id.renderButton(
+                document.getElementById("buttonDiv"),
+                { theme: "outline", size: "large" }  // 客製化屬性
+            );
+        }
+    </script>
+
+    <!-- 引入 Twitter JavaScript SDK -->
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <!-- Twitter 登入按鈕 -->
+    <script>
+        var twitterLoginPopup;
+    
+        function openTwitterLoginPopup() {
+            // 在打開新視窗之前檢查是否已經授權
+            if (window.opener && window.opener.twitterLoginAuthorized) {
+                // 已經授權，執行相應的操作
+                window.opener.handleTwitterLoginPopupClose();
+            } else {
+                // 尚未授權，打開新視窗
+                var url = "{{ url_for('twitter_verify.twitter_login') }}";
+                var width = 500;
+                var height = 600;
+                var left = (screen.width - width) / 2;
+                var top = (screen.height - height) / 2;
+                twitterLoginPopup = window.open(url, 'TwitterLoginPopup', 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top);
+    
+                // 監聽新視窗的消息事件
+                window.addEventListener('message', function(event) {
+                    // 收到來自新視窗的消息，執行相應的操作
+                    if (event.data === 'loginSuccess') {
+                        // 關閉新視窗
+                        twitterLoginPopup.close();
+    
+                        // 在主視窗執行相應的操作
+                        if (window.opener) {
+                            window.opener.handleTwitterLoginPopupClose();
+                        }
+                    }
+                });
+            }
+        }
+    </script>    
+
+    <style>
+        .center-container {
+            display: flex;
+            justify-content: space-between;  /* 讓三個按鈕分別靠左、靠中間和靠右 */
+            align-items: center;
+        }
+
+        /* 共用的樣式 */
+        .custom-button {
+            padding: 10px;
+            background-color: #fff;
+            color: #000;
+            border: 2px solid #CFCFCF;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* 水平居中 */
+            width: 150px; /* 寬度 */
+            height: 35px; /* 高度 */
+        }
+
+        /* 左邊按鈕的樣式 */
+        .left-button {
+            margin-right: 10px;  /* 調整右邊邊距 */
+        }
+
+        /* 中間按鈕的樣式 */
+        .center-button {
+            margin-left: auto;  /* 將左邊邊距設為 auto，讓中間按鈕靠中間對齊 */
+            margin-right: auto;  /* 將右邊邊距設為 auto，同時也讓中間按鈕靠中間對齊 */
+        }
+
+        /* 右邊按鈕的樣式 */
+        .right-button {
+            margin-left: 10px;  /* 調整左邊邊距 */
+        }
+        .lhhucE {
+            display: flex;
+            align-items: center;
+            margin: 20px 0; /* 調整上下間距 */
+        }
+
+        .lreZhl {
+            flex-grow: 1; /* 使分隔線占滿剩餘空間 */
+            background-color: #ccc; /* 設置分隔線顏色 */
+            height: 2px; /* 設置分隔線的高度 */
+            margin: 0 10px; /* 調整分隔線左右間距 */
+        }
+
+        .PqS8vj {
+            color: #000; /* 設置分隔線中間文字的顏色 */
+        }
+        
+        .center-recaptcha {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
+
+    </style>
+</body>
+</html>
+{% endblock %}

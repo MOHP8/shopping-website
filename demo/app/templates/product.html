@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+
+{% block head %}
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <title>{% block title %}Material Design for Bootstrap{% endblock %}</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css"/>
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"/>
+    <!-- MDB -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mdb.min.css') }}">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+{% endblock %}
+
+{% block content %}
+<body>
+<!--Main layout-->
+<main class="mt-5 pt-4">
+    <div class="container mt-5">
+        <!--Grid row-->
+        <div class="row">
+            <!--Grid column-->
+            <div class="col-md-6 mb-4">
+                <img src="data:image/png;base64,{{ product.image_base64 }}" class="img-fluid" alt="Product Image">
+            </div>
+            <!--Grid column-->
+
+            <!--Grid column-->
+            <div class="col-md-6 mb-4">
+                <!--Content-->
+                <div class="p-4">
+                    <h1 style="font-size: 25px; color: gray; visibility: hidden;" id="product-id" >{{ product.id }}</h1>
+                    <h1 style="font-size: 25px; color: gray;" id="product-UUID">{{ product.UUID }}</h1>
+                    <h1 style="font-size: 30px;" id="product-name">{{ product.name }}</h1>
+                    <div class="mb-3">
+                        <a href="">
+                            <span class="badge bg-dark me-1">{{ product.category }}</span>
+                        </a>
+                        <a href="">
+                            <span class="badge bg-info me-1">New</span>
+                        </a>
+                        <a href="">
+                            <span class="badge bg-danger me-1">Bestseller</span>
+                        </a>
+                    </div>
+                
+                    <p class="lead">
+                        <span class="me-1">
+                            <del>$200</del>
+                        </span>
+                        <span>${{ product.price }}</span>
+                    </p>
+                
+                    <strong><p style="font-size: 20px;">Description</p></strong>
+
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Et dolor suscipit libero eos atque quia
+                        ipsa sint voluptatibus! Beatae sit assumenda asperiores iure at maxime atque repellendus maiores
+                        quia sapiente.</p>
+
+                    <form class="d-flex justify-content-left">
+                             <div class="form-outline" style="width: 250px;">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default btn-quantity-decrease" data-e2e-id="decrease-cart-item-quantity_button">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </span>
+                                <input type="number" id="quantity-input" class="form control text-center" value="1" min="1" max="10" style="border: none; width: 100px">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default btn-quantity-increase" data-e2e-id="increase-cart-item-quantity_button">
+                                    <i class="fa fa-plus"></i>
+                                    </button>
+                                </span>
+                            </div>
+                            <button class="btn btn-primary ms-1" id="add-to-cart-button" type="button">
+                                Add to cart
+                                <i class="fas fa-shopping-cart ms-1"></i>
+                            </button>
+
+                    </form>
+                </div>
+                <!--Content-->
+            </div>
+            <!--Grid column-->
+        </div>
+        <!--Grid row-->
+
+
+
+        <hr/>
+
+        <!--Grid row-->
+        <div class="row d-flex justify-content-center">
+            <!--Grid column-->
+            <div class="col-md-6 text-center">
+                <h4 class="my-4 h4">Additional information</h4>
+
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus suscipit modi sapiente illo soluta
+                    odit voluptates, quibusdam officia. Neque quibusdam quas a quis porro? Molestias illo neque eum in
+                    laborum.</p>
+            </div>
+            <!--Grid column-->
+        </div>
+        <!--Grid row-->
+
+        <!--Grid row-->
+        <div class="row">
+            <!--Grid column-->
+            <div class="col-lg-4 col-md-12 mb-4">
+                <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/11.jpg" class="img-fluid"
+                     alt=""/>
+            </div>
+            <!--Grid column-->
+
+            <!--Grid column-->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/12.jpg" class="img-fluid"
+                     alt=""/>
+            </div>
+            <!--Grid column-->
+
+            <!--Grid column-->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Products/13.jpg" class="img-fluid"
+                     alt=""/>
+            </div>
+            <!--Grid column-->
+        </div>
+        <!--Grid row-->
+    </div>
+</main>
+<!--Main layout-->
+
+<!--數量加減的按鈕-->
+<script>
+    document.querySelector('.btn-quantity-decrease').addEventListener('click', function() {
+        var input = document.querySelector('#quantity-input');
+        var value = parseInt(input.value);
+        if (value > 1) {
+            input.value = value - 1;
+        }
+    });
+
+    document.querySelector('.btn-quantity-increase').addEventListener('click', function() {
+        var input = document.querySelector('#quantity-input');
+        var value = parseInt(input.value);
+        if (value < 10) {
+            input.value = value + 1;
+        }
+    });
+</script>
+
+
+<!--Add to cart relate-->
+<script>
+    // 获取输入数量的元素
+    const inputQuantity = document.getElementById('quantity-input');
+
+    // 获取加入购物车按钮的元素
+    const addToCartButton = document.getElementById('add-to-cart-button');
+
+    // 获取商品编号元素
+    const productID = document.getElementById('product-id'); // 假设有一个表示商品编号的元素
+
+    // 监听输入数量的变化 來控制button是否可按
+    inputQuantity.addEventListener('input', function() {
+        // 获取用户输入的数量
+        const quantity = parseInt(inputQuantity.value, 10);
+
+        // 当用户输入数量大于0且小于等于10时，启用加入购物车按钮
+        if (quantity > 0 && quantity <= 10) {
+            addToCartButton.disabled = false;
+        } else {
+            addToCartButton.disabled = true;
+        }
+    });
+
+    // 监听加入购物车按钮的点击事件
+    addToCartButton.addEventListener('click', function() {
+        // 获取用户输入的数量
+        const quantity = parseInt(inputQuantity.value, 10);
+
+        // 获取商品编号
+        const productId = productID.textContent; // 获取商品编号的方式取决于你的页面结构
+
+         // 构建包含商品信息的对象
+        const productInfo = {
+        product_id: productId,
+        quantity: quantity
+         };
+
+
+        // 向服务器发送 POST 请求以增加购物车数量
+        fetch('/add_to_cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json' // 指定发送的数据类型为 JSON
+            },
+            body: JSON.stringify(productInfo) // 将数量作为 JSON 数据发送
+        })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json(); // 解析 JSON 数据
+            }
+        })
+        .then(data => {
+            // 更新页面上的购物车数量元素 將獲取data放入cartCountElement變數
+            const cartCountElement = document.getElementById('cart-count');
+            cartCountElement.textContent = data.cart_count;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+
+<!-- footer -->
+<footer class="text-center text-white mt-4" style="background-color: #607d8b;">
+    <!--Call to action-->
+    <div class="pt-4 pb-2">
+        <a class="btn btn-outline-white footer-cta mx-2" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;"
+           href="https://mdbootstrap.com/docs/jquery/getting-started/download/" target="_blank" role="button">
+            <i class="fas fa-download ms-2"></i>
+        </a>
+        <a class="btn btn-outline-white footer-cta mx-2" style="box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;"
+           href="https://mdbootstrap.com/education/bootstrap/" target="_blank" role="button">
+
+            <i class="fas fa-graduation-cap ms-2"></i>
+        </a>
+    </div>
+    <!--/.Call to action-->
+
+    <hr class="text-dark"/>
+
+    <div class="container">
+        <!-- Section: Social media -->
+        <section class="mb-3">
+            <!-- Facebook -->
+            <a class="btn-link btn-floating btn-lg text-white" href="#!" role="button" data-mdb-ripple-color="dark"><i
+                    class="fab fa-facebook-f"></i></a>
+
+            <!-- Twitter -->
+            <a class="btn-link btn-floating btn-lg text-white" href="#!" role="button" data-mdb-ripple-color="dark"><i
+                    class="fab fa-twitter"></i></a>
+
+            <!-- Google -->
+            <a class="btn-link btn-floating btn-lg text-white" href="#!" role="button" data-mdb-ripple-color="dark"><i
+                    class="fab fa-google"></i></a>
+
+            <!-- Instagram -->
+            <a class="btn-link btn-floating btn-lg text-white" href="#!" role="button" data-mdb-ripple-color="dark"><i
+                    class="fab fa-instagram"></i></a>
+
+            <!-- YouTube -->
+            <a class="btn-link btn-floating btn-lg text-white" href="#!" role="button" data-mdb-ripple-color="dark"><i
+                    class="fab fa-youtube"></i></a>
+            <!-- Github -->
+            <a class="btn-link btn-floating btn-lg text-white" href="#!" role="button" data-mdb-ripple-color="dark"><i
+                    class="fab fa-github"></i></a>
+        </section>
+        <!-- Section: Social media -->
+    </div>
+    <!-- Grid container -->
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2); text-color: #e0e0e0;">
+        © 2022 Copyright:
+        <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+    </div>
+    <!-- Copyright -->
+</footer>
+
+<!--&lt;!&ndash; MDB &ndash;&gt;-->
+<!--<script type="text/javascript" src="{{ url_for('static', filename='js/mdb.min.js') }}"></script>-->
+
+<!--&lt;!&ndash; Custom scripts &ndash;&gt;-->
+<!--<script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>-->
+
+<!-- MDB -->
+<script type="text/javascript" src="js/mdb.min.js"></script>
+<!-- Custom scripts -->
+<script type="text/javascript" src="js/script.js"></script>
+
+</body>
+{% endblock %}
+

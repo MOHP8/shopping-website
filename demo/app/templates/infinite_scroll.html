@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+        <!-- Products -->
+        <section>
+            <div class="text-center">
+                <div class="row" id="container">
+                    {% for product in all_products %}
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="card scroll">
+                                <div class="bg-image hover-zoom ripple ripple-surface ripple-surface-light"
+                                     data-mdb-ripple-color="light">
+                                    {% if product.image_base64 %}
+                                        <img src="data:image/png;base64,{{ product.image_base64 }}" class="w-100" alt="{{ product.name }}"/>
+                                    {% else %}
+                                        <!-- 如果沒有圖片，可以顯示一個預設圖片或者不顯示 -->
+                                        <img src="path/to/default/image.jpg" class="w-100" alt="{{ product.name }}"/>
+                                    {% endif %}
+                                    <a href="{{ url_for('shop.product', product_id=product.id) }}">
+                                        <div class="mask">
+                                            <div class="d-flex justify-content-start align-items-end h-100">
+                                                <h5><span class="badge bg-dark ms-2">NEW</span></h5>
+                                            </div>
+                                        </div>
+                                        <div class="hover-overlay">
+                                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                                        </div>
+                                    </a>
+                                </div>
+
+                                <div class="card-body">
+                                    <a href="" class="text-reset">
+                                        <h5 class="card-title mb-2">{{ product.name }}</h5>
+                                    </a>
+                                    <a href="" class="text-reset ">
+                                        <p>{{ product.category }}</p>
+                                    </a>
+                                    <h6 class="mb-3 price">NT${{ product.price }}</h6>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+         <div class="page-load-status">
+              <div class="loader-ellips infinite-scroll-request">
+                <span class="loader-ellips__dot"></span>
+                <span class="loader-ellips__dot"></span>
+                <span class="loader-ellips__dot"></span>
+                <span class="loader-ellips__dot"></span>
+              </div>
+              <p class="infinite-scroll-last">End of content</p>
+              <p class="infinite-scroll-error">No more pages to load</p>
+        </div>

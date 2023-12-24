@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    {% block title %}基本資料修改{% endblock %}
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css"/>
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"/>
+    <!-- MDB -->
+    <link rel="stylesheet" href="static/css/mdb.min.css"/>
+    <!-- Custom styles -->
+    <!-- <link rel="stylesheet" href="static/css/style.css"/> -->
+{% endblock %}
+
+{% block content %}
+    <body>
+    <div class="container mt-5">
+        <h2 class="text-center">基本資料修改</h2>
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">編輯基本資料</h5>
+                <p class="card-text">請填寫或更新您的基本會員資料，以確保我們有最新的聯絡資訊。</p>
+                <!-- 在這裡加入基本資料編輯的表單或內容 -->
+            </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{{ url_for('auth.dashboard') }}" class="btn btn-primary">返回會員專區</a>
+        </div>
+    </div>
+    </body>
+{% endblock %}

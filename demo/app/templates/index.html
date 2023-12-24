@@ -1,0 +1,458 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+<meta http-equiv="x-ua-compatible" content="ie=edge"/>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css"/>
+<!-- Google Fonts Roboto -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"/>
+<!-- MDB -->
+<link rel="stylesheet" href="static/css/mdb.min.css"/>
+<!-- Custom styles -->
+<!-- 返回頂部按鈕的 CSS 樣式 -->
+<style>
+    #scrollTopButton {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #007BFF;  /* 按鈕背景顏色 */
+        color: white;               /* 按鈕文字顏色 */
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        cursor: pointer;
+    }
+
+    #btn-search {
+        background-color: #c0c0c0; /* 深一點的灰色 */
+        border-color: #c0c0c0; /* 如果需要邊框顏色 */
+        box-shadow: none; /* 去掉陰影 */
+    }
+
+</style>
+<!-- <link rel="stylesheet" href="static/css/style.css"/> -->
+{% endblock %}
+
+
+{% block content %}
+<!-- carousel -->
+<div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-mdb-ride="carousel">
+    <div class="carousel-indicators">
+        <button
+                type="button"
+                data-mdb-target="#carouselExampleCaptions"
+                data-mdb-slide-to="0"
+                class="active"
+                aria-current="true"
+                aria-label="Slide 1"
+        ></button>
+        <button
+                type="button"
+                data-mdb-target="#carouselExampleCaptions"
+                data-mdb-slide-to="1"
+                aria-label="Slide 2"
+        ></button>
+        <button
+                type="button"
+                data-mdb-target="#carouselExampleCaptions"
+                data-mdb-slide-to="2"
+                aria-label="Slide 3"
+        ></button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/8-col/img%282%29.jpg"
+                 class="d-block w-100" alt="Wild Landscape"/>
+            <div class="mask" style="background-color: rgba(0, 0, 0, 0.4)"></div>
+            <div class="carousel-caption d-none d-sm-block mb-5">
+                <h1 class="mb-4">
+                    <strong>Welcome</strong>
+                </h1>
+
+                <p>
+                    <strong>Best Place to Fulfill Your Needs</strong>
+                </p>
+
+                <p class="mb-4 d-none d-md-block">
+                    <strong>Enjoy The Best Version of You.</strong>
+                </p>
+
+                <a target="_blank" href="#" class="btn btn-outline-white btn-lg">Scroll Down
+                    <i class="fas fa-graduation-cap ms-2"></i>
+                </a>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/8-col/img%283%29.jpg"
+                 class="d-block w-100" alt="Camera"/>
+            <div class="mask" style="background-color: rgba(0, 0, 0, 0.4)"></div>
+            <div class="carousel-caption d-none d-md-block mb-5">
+                <h1 class="mb-4">
+                    <strong>Learn Bootstrap 5 with MDB</strong>
+                </h1>
+
+                <p>
+                    <strong>Best & free guide of responsive web design</strong>
+                </p>
+
+                <p class="mb-4 d-none d-md-block">
+                    <strong>The most comprehensive tutorial for the Bootstrap 5. Loved by over 3 000 000 users. Video
+                        and written versions
+                        available. Create your own, stunning website.</strong>
+                </p>
+
+                <a target="_blank" href="https://mdbootstrap.com/education/bootstrap/"
+                   class="btn btn-outline-white btn-lg">
+                    <i class="fas fa-graduation-cap ms-2"></i>
+                </a>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/8-col/img%285%29.jpg"
+                 class="d-block w-100" alt="Exotic Fruits"/>
+            <div class="mask" style="background-color: rgba(0, 0, 0, 0.4)"></div>
+            <div class="carousel-caption d-none d-md-block mb-5">
+                <h1 class="mb-4">
+                    <strong>Learn Bootstrap 5 with MDB</strong>
+                </h1>
+
+                <p>
+                    <strong>Best & free guide of responsive web design</strong>
+                </p>
+
+                <p class="mb-4 d-none d-md-block">
+                    <strong>The most comprehensive tutorial for the Bootstrap 5. Loved by over 3 000 000 users. Video
+                        and written versions
+                        available. Create your own, stunning website.</strong>
+                </p>
+
+                <a target="_blank" href="https://mdbootstrap.com/education/bootstrap/"
+                   class="btn btn-outline-white btn-lg">
+                    <i class="fas fa-graduation-cap ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-mdb-target="#carouselExampleCaptions"
+            data-mdb-slide="prev">
+        <i class="fas fa-chevron-left"></i>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-mdb-target="#carouselExampleCaptions"
+            data-mdb-slide="next">
+        <i class="fas fa-chevron-right"></i>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<!--Main layout-->
+<main>
+    <div class="container">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark mt-3 mb-5 shadow p-2" style="background-color: #607D8B">
+            <!-- Container wrapper -->
+            <div class="container-fluid">
+
+                <!-- Navbar brand -->
+                <a class="navbar-brand" href="#">Categories:</a>
+
+                <!-- Toggle button -->
+                <button
+                        class="navbar-toggler"
+                        type="button"
+                        data-mdb-toggle="collapse"
+                        data-mdb-target="#navbarSupportedContent2"
+                        aria-controls="navbarSupportedContent2"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <!-- Collapsible wrapper -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent2">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <!-- Link -->
+                        <li class="nav-item active">
+                            <a class="nav-link text-white" href="#" onclick="updateCategory('All', event)">All</a>
+                        </li>
+                        {% for category in categories %}
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="#" onclick="updateCategory('{{ category }}', event)">{{ category }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+
+                    <!-- Search -->
+                    <form id="search-form" class="w-auto py-1" style="max-width: 12rem">
+                        <div class="input-group">
+                            <input type="search" class="form-control rounded-0" placeholder="Search" aria-label="Search"
+                                   id="searchInput">
+                            <button type="submit" class="btn btn-primary btn-transparent" id="btn-search">
+                                <i class="fas fa-search text-white"></i> <!-- Font Awesome 搜尋圖標 -->
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <!-- Container wrapper -->
+        </nav>
+        <!-- Navbar -->
+
+        <!-- Products -->
+        <section>
+            <div class="text-center">
+                <div class="row" id="product-list">
+                    <!-- 商品卡片動態加載的部分 -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Pagination -->
+        <!-- 返回頂部按鈕 -->
+        <button id="scrollTopButton" onclick="scrollToTop()">返回頂部</button>
+    </div>
+</main>
+<!--Main layout-->
+
+<footer class="text-center text-white mt-4" style="background-color: #607D8B">
+
+    <!--Call to action-->
+    <div class="pt-4 pb-2">
+        <a class="btn btn-outline-white footer-cta mx-2"
+           href="https://mdbootstrap.com/docs/jquery/getting-started/download/" target="_blank" role="button">
+            <i class="fas fa-download ms-2"></i>
+        </a>
+        <a class="btn btn-outline-white footer-cta mx-2" href="https://mdbootstrap.com/education/bootstrap/"
+           target="_blank" role="button">
+            <i class="fas fa-graduation-cap ms-2"></i>
+        </a>
+    </div>
+    <!--/.Call to action-->
+
+    <hr class="text-dark">
+
+    <div class="container">
+        <!-- Section: Social media -->
+        <section class="mb-3">
+
+            <!-- Facebook -->
+            <a
+                    class="btn-link btn-floating btn-lg text-white"
+                    href="#!"
+                    role="button"
+                    data-mdb-ripple-color="dark"
+            ><i class="fab fa-facebook-f"></i
+            ></a>
+
+            <!-- Twitter -->
+            <a
+                    class="btn-link btn-floating btn-lg text-white"
+                    href="#!"
+                    role="button"
+                    data-mdb-ripple-color="dark"
+            ><i class="fab fa-twitter"></i
+            ></a>
+
+            <!-- Google -->
+            <a
+                    class="btn-link btn-floating btn-lg text-white"
+                    href="#!"
+                    role="button"
+                    data-mdb-ripple-color="dark"
+            ><i class="fab fa-google"></i
+            ></a>
+
+            <!-- Instagram -->
+            <a
+                    class="btn-link btn-floating btn-lg text-white"
+                    href="#!"
+                    role="button"
+                    data-mdb-ripple-color="dark"
+            ><i class="fab fa-instagram"></i
+            ></a>
+
+            <!-- YouTube -->
+            <a
+                    class="btn-link btn-floating btn-lg text-white"
+                    href="#!"
+                    role="button"
+                    data-mdb-ripple-color="dark"
+            ><i class="fab fa-youtube"></i
+            ></a>
+            <!-- Github -->
+            <a
+                    class="btn-link btn-floating btn-lg text-white"
+                    href="#!"
+                    role="button"
+                    data-mdb-ripple-color="dark"
+            ><i class="fab fa-github"></i
+            ></a>
+        </section>
+        <!-- Section: Social media -->
+    </div>
+    <!-- Grid container -->
+</footer>
+
+<!-- 分頁和商品動態加載 -->
+<script>
+    let loading = false;
+    let page = 1;
+    let currentCategory = 'All'; // 預設類別
+    let cachedData = {};
+    let endOfPage = false; // 新增變數來標記是否到達最底部
+    let keyword = 'None'
+
+    document.getElementById('search-form').addEventListener('submit', function (event) {
+    event.preventDefault(); // 防止表單提交刷新頁面
+
+    // 在事件處理程序中更新全域 keyword 變數
+    keyword = document.getElementById('searchInput').value.trim();
+    // alert(keyword);
+    page = 1;
+    // alert(page);
+
+
+    // 調用 loadMoreProducts 函數
+    loadMoreProducts();
+    });
+
+    function loadMoreProducts() {
+        if (loading || endOfPage) {
+            return;
+        }
+
+        showGlobalLoading(); // 顯示 loading
+        loading = true;
+
+        fetch(`/api/products?page=${page}&keyword=${keyword}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                hideGlobalLoading(); // 隱藏 loading
+
+                const productList = document.getElementById('product-list');
+
+                // 在加載第一頁時清空現有商品
+                if (page === 1) {
+                    productList.innerHTML = '';
+                }
+
+                // 根據當前類別篩選商品
+                const filteredProducts = data.all_products.filter(product => {
+                    return currentCategory === 'All' || product.ProductCategory === currentCategory;
+                });
+
+                displayProducts(filteredProducts);
+
+                // 檢查是否到達最後一頁，如果是，設置標誌並不再加載
+                console.log(data.all_products.length)
+                if (!data.all_products.length) {
+                    endOfPage = true;
+                    const endMessage = document.createElement('p');
+                    endMessage.innerText = '--------已經是最底部了--------';
+                    productList.appendChild(endMessage);
+                }
+
+                page += 1;
+                loading = false;
+            })
+            .catch(error => {
+                console.error('加載商品時出錯:', error);
+                hideGlobalLoading(); // 隱藏 loading
+                loading = false;
+            });
+    }
+
+
+    function displayProducts(products) {
+        console.log(products);
+        console.log(typeof products);
+        const productList = document.getElementById('product-list');
+        products.forEach(product => {
+            const productItem = document.createElement('div');
+            productItem.classList.add('col-lg-3', 'col-md-6', 'mb-4');
+            let imageSrc = product.Image;
+
+            productItem.innerHTML = `
+                <div class="card">
+                    <a href="/product/${product.ProductID}">
+                        <div class="mask">
+                            <div class="d-flex justify-content-start align-items-end h-100">
+                                <h5><span class="badge bg-dark ms-2">NEW</span></h5>
+                            </div>
+                        </div>
+                        <img src="data:image/png;base64,${product.Image}" class="card-img-top" alt="${product.ProductName}">
+                        <div class="card-body">
+                            <h5 class="card-title">${product.ProductName}</h5>
+                            <p class="card-text">${product.ProductCategory}</p>
+                            <h6 class="mb-3 price">NT$${product.Price}</h6>
+                        </div>
+                    </a>
+                </div>
+            `;
+            productList.appendChild(productItem);
+        });
+    }
+
+    // 更新當前類別的函數
+    function updateCategory(category, event) {
+        console.log(category);
+        currentCategory = category;
+        page = 1;
+        endOfPage = false; // 重置標誌
+
+        const productList = document.getElementById('product-list');
+        productList.innerHTML = '';
+
+        loadMoreProducts();
+        event.preventDefault();
+    }
+
+    window.addEventListener('scroll', function () {
+        // 當視窗高度加上滾動位置達到頁面高度時加載更多商品
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !loading && !endOfPage) {
+            loadMoreProducts();
+        }
+    });
+
+
+    // 使用預設類別初始化頁面
+    loadMoreProducts();
+
+
+</script>
+
+
+<!-- Pagination -->
+<script>
+    // 返回頂部按鈕的 JavaScript 代碼
+    const scrollTopButton = document.getElementById("scrollTopButton");
+
+    window.addEventListener("scroll", function () {
+        // 當滾動位置超過 20 像素時顯示按鈕，否則隱藏
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            scrollTopButton.style.display = "block";
+        } else {
+            scrollTopButton.style.display = "none";
+        }
+    });
+
+    // 滾動到頁面頂部的函數
+    function scrollToTop() {
+        document.body.scrollTop = 0; // 用於 Safari 瀏覽器
+        document.documentElement.scrollTop = 0; // 用於 Chrome、Firefox、IE 和 Opera 瀏覽器
+    }
+
+</script>
+
+{% endblock %}

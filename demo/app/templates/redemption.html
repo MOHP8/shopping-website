@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+
+{% block head %}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+<meta http-equiv="x-ua-compatible" content="ie=edge"/>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css"/>
+<!-- Google Fonts Roboto -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"/>
+<!-- MDB -->
+<link rel="stylesheet" href="static/css/mdb.min.css"/>
+<!-- Custom styles -->
+<!-- <link rel="stylesheet" href="static/css/style.css"/> -->
+{% endblock %}
+
+
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+    <title>eSim Redemption</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+    <h2 class="text-center mt-3">eSim Redemption Form</h2>
+    <div class="container mt-4">
+        <div class="alert alert-secondary" role="alert">
+            Please input your email and redemption code to get your eSIM data package. Once the eSIM QRCODE is received, please scan it through your phone within 30 days.
+        </div>
+        <form>
+            <div class="form-group mb-3">
+                <label for="email" class="text-muted">Email:</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter your email">
+            </div>
+            <div class="form-group mb-3">
+                <label for="confirmEmail" class="text-muted">Confirm email:</label>
+                <input type="email" class="form-control" id="confirmEmail" placeholder="Confirm your email">
+            </div>
+            <div class="form-group mb-3">
+                <label for="redemptionCode" class="text-muted">Redemption Code:</label>
+                <input type="text" class="form-control" id="redemptionCode" placeholder="Enter your redemption code">
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm">Redeem</button>
+            <p class="small mt-2">Not received email? <a href="#">Resend Email</a></p>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+{% endblock %}
