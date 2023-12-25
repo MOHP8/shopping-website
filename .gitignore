@@ -1,0 +1,25 @@
+# 忽略所有以 .log 結尾的檔案
+*.log
+
+# 忽略 build 目錄下的所有檔案
+build/
+
+# 忽略 test 目錄及其內容
+test/
+
+# 忽略所有 .tmp 檔案
+*.tmp
+
+config.py
+
+*.crt
+
+*.key
+
+__MACOSX
+
+__pycache__
+
+old_bak
+
+venv
