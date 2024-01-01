@@ -7,9 +7,8 @@ oauth = OAuth()
 # 設定各種 OAuth 提供者
 twitter = oauth.register(
     name='twitter',
-    
-    client_id=Config.twitter_client_id,
-    client_secret=Config.twitter_client_secret ,
+    client_id=Config.TWITTER_CLIENT_ID,
+    client_secret=Config.TWITTER_CLIENT_SECRET,
     authorize_url='https://api.twitter.com/oauth/authenticate',
     authorize_params=None,
     request_token_url='https://api.twitter.com/oauth/request_token',
