@@ -13,8 +13,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 複製所有代碼到容器中
 COPY demo .
 
+# 定義環境變數，表示配置檔案的路徑
+# ENV CONFIG_PATH /demo/config.py
+
 # 將 Flask 應用程序運行在端口 5000
 EXPOSE 5000
-# CMD ["gunicorn", "-b", "0.0.0.0:5000", "wsgi_app:app"]
-CMD ["gunicorn", "-k", "gevent", "-b", "0.0.0.0:5000", "wsgi_app:app"]
-
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "--workers", "1", "--worker-class", "eventlet", "wsgi_app:app"]

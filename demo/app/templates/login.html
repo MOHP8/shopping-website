@@ -30,6 +30,53 @@
     <!-- 引入Font Awesome圖標 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
+        .center-container {
+            display: flex;
+            justify-content: space-between;  /* 讓三個按鈕分別靠左、靠中間和靠右 */
+            align-items: center;
+        }
+
+        /* 共用的樣式 */
+        .custom-button {
+            padding: 10px;
+            background-color: #fff;
+            color: #000;
+            border: 2px solid #CFCFCF;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* 水平居中 */
+            width: 150px; /* 寬度 */
+            height: 35px; /* 高度 */
+            box-sizing: border-box; /* 保證 padding 不會增加元素的寬度 */
+        }
+        
+        .lhhucE {
+            display: flex;
+            align-items: center;
+            margin: 20px 0; /* 調整上下間距 */
+        }
+
+        .lreZhl {
+            flex-grow: 1; /* 使分隔線占滿剩餘空間 */
+            background-color: #ccc; /* 設置分隔線顏色 */
+            height: 2px; /* 設置分隔線的高度 */
+            margin: 0 10px; /* 調整分隔線左右間距 */
+        }
+
+        .PqS8vj {
+            color: #000; /* 設置分隔線中間文字的顏色 */
+        }
+        
+        .center-recaptcha {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
+
+    </style>
+    <style>
         body {
             background-color: #f4f4f4;
         }
@@ -87,19 +134,19 @@
                          <!-- 在登錄表單之後添加 Google 登錄按鈕 -->
                          <div class="center-container">
                             <!-- 自建 google 登入 -->
-                            <button class="custom-button" onclick="openGoogleLoginPopup()">
+                            <button type="button" class="custom-button" onclick="openGoogleLoginPopup()">
                                 <img src="static/img/Google__G__Logo.png" alt="Google Icon">
                                 Google
                             </button>
                         
                             <!-- 自建 FaceBook 登入 -->
-                            <button class="custom-button" onclick="facebookLogin()">
+                            <button type="button" class="custom-button" onclick="facebookLogin()">
                                 <img src="static/img/Facebook_Logo.png" alt="FaceBook Icon">
                                 FaceBook
                             </button>
                         
                             <!-- 自建 Line 登入 -->
-                            <button class="custom-button" onclick="">
+                            <button type="button" class="custom-button" onclick="">
                                 <img src="static/img/Line_Logo.png" alt="Line Icon">
                                 Line
                             </button>
@@ -108,19 +155,19 @@
                     <form>
                         <div class="center-container">
                             <!-- 自建 Twitter 登入 -->
-                            <button class="custom-button" onclick="openTwitterLoginPopup()">
+                            <button type="button" class="custom-button" onclick="openTwitterLoginPopup()">
                                 <img src="static/img/twitter_logo.png">
                                 Twitter
                             </button>
                         
                             <!-- 自建 XX 登入 -->
-                            <button class="custom-button" onclick="">
+                            <button type="button" class="custom-button" onclick="">
                                 <img src="">
                                 
                             </button>
                         
                             <!-- 自建 XX 登入 -->
-                            <button class="custom-button" onclick="">
+                            <button type="button" class="custom-button" onclick="">
                                 <img src="">
                                 
                             </button>
@@ -128,7 +175,7 @@
                     </form>
                     <form>
                         <!-- google 登入 (js) -->
-                        <div id="buttonDiv" style="max-width: 120px; overflow: hidden;"></div>
+                        <!-- <div id="buttonDiv" style="max-width: 120px; overflow: hidden;"></div> -->
                         <!-- twitter 登入按鈕 -->
                     </form>
                     <div class="text-center mt-3">
@@ -495,68 +542,6 @@
             }
         }
     </script>    
-
-    <style>
-        .center-container {
-            display: flex;
-            justify-content: space-between;  /* 讓三個按鈕分別靠左、靠中間和靠右 */
-            align-items: center;
-        }
-
-        /* 共用的樣式 */
-        .custom-button {
-            padding: 10px;
-            background-color: #fff;
-            color: #000;
-            border: 2px solid #CFCFCF;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center; /* 水平居中 */
-            width: 150px; /* 寬度 */
-            height: 35px; /* 高度 */
-        }
-
-        /* 左邊按鈕的樣式 */
-        .left-button {
-            margin-right: 10px;  /* 調整右邊邊距 */
-        }
-
-        /* 中間按鈕的樣式 */
-        .center-button {
-            margin-left: auto;  /* 將左邊邊距設為 auto，讓中間按鈕靠中間對齊 */
-            margin-right: auto;  /* 將右邊邊距設為 auto，同時也讓中間按鈕靠中間對齊 */
-        }
-
-        /* 右邊按鈕的樣式 */
-        .right-button {
-            margin-left: 10px;  /* 調整左邊邊距 */
-        }
-        .lhhucE {
-            display: flex;
-            align-items: center;
-            margin: 20px 0; /* 調整上下間距 */
-        }
-
-        .lreZhl {
-            flex-grow: 1; /* 使分隔線占滿剩餘空間 */
-            background-color: #ccc; /* 設置分隔線顏色 */
-            height: 2px; /* 設置分隔線的高度 */
-            margin: 0 10px; /* 調整分隔線左右間距 */
-        }
-
-        .PqS8vj {
-            color: #000; /* 設置分隔線中間文字的顏色 */
-        }
-        
-        .center-recaptcha {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        }
-
-    </style>
 </body>
 </html>
 {% endblock %}

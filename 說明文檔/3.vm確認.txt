@@ -1,0 +1,44 @@
+# 要從本機用遠端訪問模式需安裝 MySQL 客戶端
+sudo apt-get install -y mysql-client
+
+# 容器訊息查看
+docker logs -f [CONTAINER_ID]
+
+# 檢查所有容器（可查詢容器 ID）
+docker ps
+
+# 查詢容器 IP 位置（替換 'flask_app' 為你的 Flask 容器名稱）
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' flask_app
+
+# 背景執行docker(主要是因為我們執行docker後會斷開連線 如果不背景執行,執行會被中斷)
+docker run -d -p 5000:5000 -v ./config.py:/demo/config.py pphao/myflaskapp
+
+# 檢查 MySQL 運行位置
+sudo service mysql status
+
+# 查看 MySQL 所有權限（使用者）
+SELECT host, user FROM mysql.user;
+
+# 到 Docker 的容器內（可以確認 MySQL 連線是否暢通）
+docker exec -it [CONTAINER_ID] /bin/bash
+
+# 查看 MySQL 監聽的位置（為了允許遠程連接）
+sudo netstat -tlnp | grep 3306  # 檢查是否有設定成功
+sudo vi /etc/mysql/my.cnf  # 修改 MySsudo service nginx stop306）未被防火牆阻擋，且應用程式可以訪問該端口。
+5. Docker 容器網路模式：確認 Docker 容器的網路模式是否正確設定，包括可能的端口映射。
+6. Docker 容器端口映射：如果使用 Docker 容器，確保容器的端口映射設定正確。
+7. 防火牆和安全組：在主機和雲端環境的防火牆和安全組中確保容器和其他機器的通信被允許。
+8. 資料庫和表的權限：除了 MySQL 使用者權限外，確保資料庫和表也有適當的權限。
+
+# 使用 Nginx：
+1. 安裝 Nginx
+2. 修改 Nginx.conf（sudo vim /etc/nginx/sites-available/default）
+3. 重啟 Nginx（sudo service nginx restart） or (sudo service nginx reload)
+# 如還是有問題 請查看log..(sudo cat /var/log/nginx/error.log)
+#清空Nginx.log檔案(sudo truncate -s 0 /var/log/nginx/error.log)
+
+# 設定 NO-IP（免費網域）
+設定完畢後，要調整 Nginx 的 servername。請根據你提問的內容進行設定。
+
+# 建立SSL憑證(需要占用 80port,所以先關閉 nginx->sudo service nginx stop)
+sudo certbot certonly --standalone --preferred-challenges http -d pphao.hopto.org (目前憑證的有效期到2024年3月31日)

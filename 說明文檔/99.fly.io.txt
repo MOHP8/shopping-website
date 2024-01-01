@@ -1,0 +1,8 @@
+# 下載 fly.io (下載好記得設定環境變數)
+powershell -Command "iwr https://fly.io/install.ps1 -useb | iex"
+
+# 登入帳密
+flyctl auth login
+ 
+# 建立儲存庫
+flyctl launch
