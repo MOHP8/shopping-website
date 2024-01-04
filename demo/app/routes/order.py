@@ -12,7 +12,7 @@ def history():
     member_id = user_info['MemberID']
     print(member_id)
     # 訂單資訊
-    check_query = "SELECT OrderID, OrderDate, TotalPrice, State FROM orders WHERE MemberID = %s;"
+    check_query = "SELECT OrderID, OrderDate, TotalPrice, State FROM Orders WHERE MemberID = %s;"
     order_data = database.get_data(check_query,(member_id,))
     print(order_data)
     return render_template('order_history.html', order_data=order_data)

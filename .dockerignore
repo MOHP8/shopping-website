@@ -5,5 +5,5 @@ __pycache__
 *.db
 *.sqlite
 .DS_Store
-config.py
+demo/config.py
 note
